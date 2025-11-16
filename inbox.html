@@ -101,8 +101,8 @@ function uploadProfilePic(){
 
 function logout(){ localStorage.removeItem('username'); location.href='index.html'; }
 
-// Only Dzintars sees the menu buttons and can toggle with Tab
-if(username !== 'Dzintars'){
+// Only Test sees the menu buttons and can toggle with Tab
+if(username !== 'Test'){
   document.getElementById('modMenu').style.display = 'none';
 } else {
   // show mod buttons visible (they will already show, but ensure menu toggles on Tab)
@@ -113,7 +113,7 @@ if(username !== 'Dzintars'){
 
 // toggle mod menu with Tab for Dzintars only
 document.addEventListener('keydown', (e)=>{
-  if(e.key === 'Tab' && username === 'Dzintars'){
+  if(e.key === 'Tab' && username === 'Test'){
     e.preventDefault();
     const m = document.getElementById('modMenu');
     m.style.display = (m.style.display === 'block') ? 'none' : 'block';
