@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Inbox</title>
+<style>
+    body { font-family: Arial; background:#ffffff; margin:0; }
+    .topbar { background:#007bff; color:white; padding:15px; font-size:20px; }
+    #content { padding:20px; }
+
+    /* MOD MENU button */
+    #modButton {
+        position:fixed; 
+        top:20px; right:20px; 
+        padding:10px 18px; 
+        background:red; 
+        color:white; 
+        border-radius:8px; 
+        cursor:pointer;
+        display:none; /* hidden unless user=Test */
+    }
+
+    /* MOD MENU window */
+    #modMenu {
+        position:fixed; top:80px; right:20px;
+        background:white; border:2px solid black;
+        width:220px; padding:10px;
+        border-radius:10px;
+        display:none;
+    }
+</style>
+</head>
+<body>
+
+<div class="topbar">Inbox</div>
+
+<div id="modButton" onclick="toggleMenu()">MOD MENU</div>
+
+<div id="modMenu">
+    <h3>Mod Menu</h3>
+    <button onclick="alert('God Mode Enabled!')">God Mode</button><br><br>
+    <button onclick="alert('Unlimited Money!')">Unlimited Coins</button><br><br>
+    <button onclick="alert('Prank Activated!')">Prank</button>
+</div>
+
+<div id="content">
+    <h2>Welcome!</h2>
+    <p>This is your inbox page.</p>
+</div>
+
+<script>
+const user = localStorage.getItem("loggedUser");
+
+// Show MOD MENU only for user Test
+if (user === "Test") {
+    document.getElementById("modButton").style.display = "block";
+}
+
+function toggleMenu() {
+    let menu = document.getElementById("modMenu");
+    menu.style.display = (menu.style.display === "none") ? "block" : "none";
+}
+</script>
+
+</body>
+</html>
