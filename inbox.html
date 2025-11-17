@@ -1,89 +1,88 @@
 <!DOCTYPE html>
 <html>
 <head>
+<meta charset="UTF-8">
 <title>Inbox</title>
+
 <style>
-    body { font-family: Arial; background:#fff; margin:0; }
-    .topbar { background:#007bff; color:white; padding:15px; font-size:20px; }
+body { font-family: Arial; background: #f4f4f4; }
 
-    /* MOD MENU PANEL */
-    #modMenu {
-        position:fixed;
-        top:80px; right:20px;
-        width:250px;
-        background:white;
-        border:2px solid black;
-        border-radius:12px;
-        padding:15px;
-        display:none;
-        box-shadow:0 0 15px rgba(0,0,0,0.3);
-        z-index:9999;
-    }
-
-    #modMenu h3 {
-        margin-top:0;
-    }
-
-    #modMenu button {
-        width:100%;
-        padding:12px;
-        margin-top:10px;
-        font-size:16px;
-        border-radius:8px;
-        cursor:pointer;
-    }
+#modMenu {
+    position: fixed;
+    right: 20px;
+    top: 20px;
+    width: 200px;
+    background: white;
+    border: 2px solid black;
+    padding: 10px;
+    display: none;
+}
+#modMenu button {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+}
 </style>
 </head>
 <body>
 
-<div class="topbar">Inbox</div>
-
-<!-- AUDIO FILES (change URLs after uploading!) -->
-<audio id="fartSound" src="uploads/fart.mp3"></audio>
-<audio id="screamSound" src="uploads/scream.mp3"></audio>
-<audio id="pistolSound" src="uploads/pistol.mp3"></audio>
+<h2>Inbox</h2>
 
 <!-- MOD MENU -->
 <div id="modMenu">
-    <h3>Mod Menu</h3>
-    <button onclick="playFart()">💨 Fart</button>
-    <button onclick="playScream()">😱 Scream</button>
-    <button onclick="playPistol()">🔫 Pistol</button>
+    <h3>MOD MENU</h3>
+    <button onclick="triggerSound('beep')">Beep</button>
+    <button onclick="triggerSound('fart')">Fart</button>
+    <button onclick="triggerSound('scream')">Scream</button>
 </div>
 
 <script>
-const user = localStorage.getItem("loggedUser");
 
-// Show mod menu only if user = Test
-let modAllowed = (user === "Test");
-let menuVisible = false;
+// ============= LOGIN CHECK ============
+let user = localStorage.getItem("user");
+if (!user) window.location = "index.html";
 
-// Listen for TAB key
-document.addEventListener("keydown", function(e) {
-    if (!modAllowed) return;
-
-    if (e.key === "Tab") {
-        e.preventDefault(); 
-
-        menuVisible = !menuVisible;
-        document.getElementById("modMenu").style.display = menuVisible ? "block" : "none";
-    }
-});
-
-// SOUND FUNCTIONS
-function playFart() {
-    document.getElementById("fartSound").play();
+// ============= SHOW MOD MENU FOR TEST ============
+if (user === "Test") {
+    document.addEventListener("keydown", function(e){
+        if (e.key === "Tab") {
+            e.preventDefault();
+            let m = document.getElementById("modMenu");
+            m.style.display = m.style.display === "none" ? "block" : "none";
+        }
+    });
 }
 
-function playScream() {
-    document.getElementById("screamSound").play();
+// ============= TRIGGER SOUND FOR ALL USERS ============
+function triggerSound(type) {
+    fetch("sound.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sound: type })
+    });
 }
 
-function playPistol() {
-    document.getElementById("pistolSound").play();
+// ============= PLAY SOUND LOCALLY ============
+function playSound(name) {
+    let audio = new Audio("uploads/" + name + ".mp3");
+    audio.play();
 }
+
+// ============= CHECK FOR NEW SOUND EVERY 1s ============
+let lastSound = "";
+
+setInterval(() => {
+    fetch("sound.php")
+        .then(r => r.json())
+        .then(data => {
+            if (data.last && data.last !== lastSound) {
+                lastSound = data.last;
+                playSound(data.last);
+            }
+        });
+}, 1000);
+
 </script>
 
 </body>
 </html>
-
