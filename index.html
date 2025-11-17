@@ -1,32 +1,63 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Login</title>
-<meta charset="UTF-8">
-<style>
-body { font-family: Arial; background: #eee; padding: 30px; }
-input { padding: 10px; width: 200px; margin: 5px; }
-button { padding: 10px; width: 220px; }
-</style>
+  <meta charset="utf-8">
+  <title>Login / Register</title>
+  <style>
+    body { font-family: Arial, sans-serif; background:#eef7ff; display:flex; align-items:center; justify-content:center; height:100vh; margin:0; }
+    .box { background:white; padding:22px; border-radius:10px; box-shadow:0 6px 20px rgba(0,0,0,0.08); width:340px; text-align:center; }
+    input { width:100%; padding:10px; margin:8px 0; border-radius:6px; border:1px solid #ccc; box-sizing:border-box; }
+    button { padding:10px 14px; margin:6px; border-radius:6px; border:none; background:#0077cc; color:white; cursor:pointer; }
+    .hint { font-size:13px; color:#666; margin-top:10px; }
+  </style>
 </head>
 <body>
-
-<h2>Login</h2>
-
-<input id="username" placeholder="Username"><br>
-<input id="password" type="password" placeholder="Password"><br>
-<button onclick="login()">Login</button>
+  <div class="box">
+    <h2>Welcome</h2>
+    <input id="username" placeholder="Username" autocomplete="username">
+    <input id="password" type="password" placeholder="Password" autocomplete="current-password">
+    <div>
+      <button onclick="login()">Login</button>
+      <button onclick="register()">Register</button>
+    </div>
+    <div class="hint">Registered users stored in <code>data/users.json</code></div>
+  </div>
 
 <script>
-function login() {
-    let u = document.getElementById("username").value;
-    let p = document.getElementById("password").value;
+async function login(){
+  const username = document.getElementById('username').value.trim();
+  const password = document.getElementById('password').value;
+  if(!username || !password) return alert('Enter username and password');
+  try{
+    const res = await fetch('login.php', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({username, password})
+    });
+    const txt = await res.text();
+    if(txt === 'OK'){
+      localStorage.setItem('username', username);
+      location.href = 'inbox.html';
+    } else {
+      alert(txt);
+    }
+  } catch(e){ alert('Request failed'); }
+}
 
-    // very simple login
-    localStorage.setItem("user", u);
-    window.location.href = "inbox.html";
+async function register(){
+  const username = document.getElementById('username').value.trim();
+  const password = document.getElementById('password').value;
+  if(!username || !password) return alert('Enter username and password');
+  try{
+    const res = await fetch('register.php', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({username, password})
+    });
+    const txt = await res.text();
+    alert(txt);
+  } catch(e){ alert('Request failed'); }
 }
 </script>
-
 </body>
 </html>
