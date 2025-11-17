@@ -2,37 +2,31 @@
 <html>
 <head>
 <title>Login</title>
+<meta charset="UTF-8">
 <style>
-    body { font-family: Arial; background:#f0f0f0; text-align:center; padding-top:80px; }
-    #box { background:white; padding:20px; width:300px; margin:auto; border-radius:10px; }
-    input { width:90%; padding:10px; margin:6px; border-radius:5px; border:1px solid #aaa; }
-    button { padding:10px 20px; border:none; background:#007bff; color:white; border-radius:5px; cursor:pointer; }
+body { font-family: Arial; background: #eee; padding: 30px; }
+input { padding: 10px; width: 200px; margin: 5px; }
+button { padding: 10px; width: 220px; }
 </style>
 </head>
 <body>
-<div id="box">
-    <h2>Login</h2>
-    <input id="username" placeholder="Username">
-    <input id="password" placeholder="Password" type="password">
-    <button onclick="login()">Login</button>
-</div>
+
+<h2>Login</h2>
+
+<input id="username" placeholder="Username"><br>
+<input id="password" type="password" placeholder="Password"><br>
+<button onclick="login()">Login</button>
 
 <script>
 function login() {
-    let user = document.getElementById("username").value;
-    let pass = document.getElementById("password").value;
+    let u = document.getElementById("username").value;
+    let p = document.getElementById("password").value;
 
-    if (user === "" || pass === "") {
-        alert("Enter username + password");
-        return;
-    }
-
-    // Save login (simple simulation)
-    localStorage.setItem("loggedUser", user);
-
-    // Redirect to inbox
+    // very simple login
+    localStorage.setItem("user", u);
     window.location.href = "inbox.html";
 }
 </script>
+
 </body>
 </html>
